@@ -1,0 +1,8 @@
+{
+	"extends": "ts-ucode/ucode/tsconfig.json",
+	"compilerOptions": {
+		"outDir": "./bin",
+		"rootDir": "./src"
+	},
+	"include": ["./src", "ts-ucode/ucode/types"]
+}

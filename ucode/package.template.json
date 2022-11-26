@@ -1,0 +1,9 @@
+{
+	"private": true,
+	"scripts": {
+		"build": "ts2ucode"
+	},
+	"devDependencies": {
+		"ts-ucode": "*"
+	}
+}
