@@ -33,8 +33,9 @@ const exportTransformerFactory = createTransformerFactory({
 
 	transformNode: (node, { registerExport, sourceFile, factory }) => {
 		const modifiers = ts.canHaveModifiers(node)
-			? ts.getModifiers(node)?.filter((m) => m.kind !== ts.SyntaxKind.ExportKeyword)
+			? ts.getModifiers(node)?.filter((m) => m.kind !== ts.SyntaxKind.ExportKeyword) ?? []
 			: [];
+
 		// export function myFunction(...) {...}
 		if (ts.isFunctionDeclaration(node)) {
 			registerExport(<string>node.name?.getText());
@@ -54,7 +55,7 @@ const exportTransformerFactory = createTransformerFactory({
 				...node.declarationList.declarations.reduce((names, { name }) => {
 					if (ts.isIdentifier(name)) return [...names, name.text];
 					throw new SyntaxError(
-						`[export] warning: unhandled export binding in ${sourceFile.fileName}`
+						`Unhandled export binding (in ${sourceFile.fileName}: ${describeNode(node)})`
 					);
 				}, <string[]>[])
 			);

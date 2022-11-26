@@ -17,17 +17,9 @@ const COMPILER_OPTIONS: ts.CompilerOptions = {
 	experimentalDecorators: true,
 	noEmitHelpers: true,
 	declaration: false,
-	emitDeclarationOnly: false,
 	typeRoots: [],
-	alwaysStrict: false,
-	esModuleInterop: false,
-	allowSyntheticDefaultImports: false,
-	importHelpers: false,
-	isolatedModules: true,
 	strict: true,
-	allowJs: false,
-	checkJs: false,
-	removeComments: true
+	skipLibCheck: true
 };
 
 export function compile(sourceDir: string, targetDir: string): void {

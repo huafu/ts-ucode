@@ -24,7 +24,7 @@ declare module 'uci' {
 	export type MetaKey = ConfigMetaKey | PackageMetaKey | ConfigMetaKey;
 
 	export interface ISectionData {
-		[option_name: str]: any_data | undefined;
+		[option_name: str]: any_data;
 	}
 	export type OptionName = keyof ISectionData;
 	export type ISection<type extends str = str, anonymous extends bool = bool> = ISectionMeta<
@@ -37,14 +37,14 @@ declare module 'uci' {
 	export type INamedSection<type extends str = str> = ISection<type, false>;
 
 	export interface IPackageData {
-		[section_name: str]: ISection | undefined;
+		[section_name: str]: ISection;
 	}
 	export type SectionName = keyof IPackageData;
 	export type IPackage = IPackageMeta & IPackageData;
 	export type PackageKey = PackageMetaKey | SectionName;
 
 	export interface IConfigData {
-		[package_name: str]: IPackage | undefined;
+		[package_name: str]: IPackage;
 	}
 	export type PackageName = keyof IConfigData;
 	export type IConfig = IConfigMeta & IConfigData;

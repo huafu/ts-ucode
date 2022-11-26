@@ -16,8 +16,7 @@
 		"importsNotUsedAsValues": "remove",
 		"useDefineForClassFields": false,
 		"experimentalDecorators": true,
-		"noEmitHelpers": true,
-		"removeComments": true
+		"noEmitHelpers": true
 	},
 	"include": ["."]
 }

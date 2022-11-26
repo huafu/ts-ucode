@@ -39,8 +39,10 @@ ts2ucode <source-dir> <out-dir>
 
 ## Features
 
-- [x] compile source dir to target dir
-- [ ] compile standalone source file
+- [ ] compiler
+  - [x] compile source dir to target dir
+  - [ ] compile standalone source file
+  - [ ] user friendly errors using TS diagnostics
 - [ ] initialize project
   - [x] create a `package.json` (to be improved!)
   - [x] create a `tsconfig.json` (to be improved!)
@@ -58,7 +60,6 @@ ts2ucode <source-dir> <out-dir>
   - [ ] `struct`
   - [ ] `rtnl`
 - [ ] transformers
-  - [x] classes and inheritance
   - [x] default parameters
   - [x] `undefined` => `null`
   - [x] methods to functions
@@ -69,6 +70,16 @@ ts2ucode <source-dir> <out-dir>
   - [x] fixes `import` paths
   - [ ] destructuring arrays
   - [ ] destructuring objects
+  - [x] classes
+    - [x] `private/protected/public` members (static or not)
+    - [x] `constructor` (as well as members in parameters)
+    - [x] member initializers
+    - [x] inheritance
+    - [x] `super` keyword
+  - [ ] decorators
+    - [ ] functions
+    - [ ] class
+    - [x] class members
 - [ ] test runner (WIP, not even in this repo but to be imported from private closed sources)
   - [ ] run on docker
   - [ ] run on specific device

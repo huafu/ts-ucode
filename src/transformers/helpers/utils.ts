@@ -109,7 +109,7 @@ const helpersFor = dictForFileBuilder((sourceFile, { factory }) => {
 			statements.forEach((n) => {
 				if (ts.isExportAssignment(n)) {
 					throw new SyntaxError(
-						`A file with named exports cannot have default export yet (in ${
+						`A file with named exports (${exportsCount}) cannot have default export yet (in ${
 							sf.fileName
 						}: ${n.getText()})`
 					);
