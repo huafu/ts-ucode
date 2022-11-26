@@ -1,6 +1,6 @@
 {
 	"name": "ts-ucode",
-	"version": "1.0.0",
+	"version": "0.0.1",
 	"description": "TypeScript tools for OpenWRT ucode",
 	"main": "./lib/index.js",
 	"files": [
