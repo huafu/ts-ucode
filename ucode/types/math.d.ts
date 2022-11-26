@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/triple-slash-reference */
+/// <reference no-default-lib="true"/>
+/// <reference path="./ucode.d.ts" />
+
 declare module 'math' {
 	export function abs(n: str): int | double;
 	export function abs(n: double): double;

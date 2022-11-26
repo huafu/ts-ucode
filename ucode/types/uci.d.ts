@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/triple-slash-reference */
+/// <reference no-default-lib="true"/>
+/// <reference path="./uci.types.d.ts" />
+
 declare module 'uci' {
 	export interface ICursor {
 		load(pkg: PackageName): bool;

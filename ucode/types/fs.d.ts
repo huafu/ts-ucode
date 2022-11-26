@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/triple-slash-reference */
+/// <reference no-default-lib="true"/>
+/// <reference path="./ucode.d.ts" />
+
 declare module 'fs' {
 	export const enum Seek {
 		set = 1,

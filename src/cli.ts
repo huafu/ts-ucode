@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import fs from 'fs';
+import path from 'path';
 import ts from 'typescript';
 
 const COMPILER_OPTIONS: ts.CompilerOptions = {
 	keyofStringsOnly: true,
 	forceConsistentCasingInFileNames: true,
 	target: ts.ScriptTarget.ESNext,
-	module: ts.ModuleKind.ES2022,
+	module: ts.ModuleKind.ES2015,
 	moduleResolution: ts.ModuleResolutionKind.NodeJs,
 	noLib: true,
 	importsNotUsedAsValues: ts.ImportsNotUsedAsValues.Remove,
@@ -14,7 +15,8 @@ const COMPILER_OPTIONS: ts.CompilerOptions = {
 	experimentalDecorators: true,
 	noEmitHelpers: true,
 	declaration: false,
-	emitDeclarationOnly: false
+	emitDeclarationOnly: false,
+	typeRoots: []
 };
 
 export function compile(sourceDir: string, targetDir = `${sourceDir}/out/`): void {
@@ -22,18 +24,23 @@ export function compile(sourceDir: string, targetDir = `${sourceDir}/out/`): voi
 		{
 			compilerOptions: <ts.CompilerOptions>{
 				...COMPILER_OPTIONS,
-				sourceRoot: '.',
+				rootDir: sourceDir,
 				outDir: targetDir
-			}
+			},
+			include: [path.resolve(__dirname, '..', 'ucode', 'types', '*')]
 		},
 		ts.sys,
-		sourceDir
+		process.cwd()
 	);
 	const host = ts.createCompilerHost(cfg.options);
 
 	// write .uc files and not .js ones
-	host.writeFile = (fileName: string, contents: string) =>
-		fs.writeFileSync(fileName.replace(/\.js$/, '.uc'), contents, { encoding: 'utf-8' });
+	host.writeFile = (fileName: string, contents: string) => {
+		const file = fileName.replace(/\.js$/, '.uc');
+		const dir = path.dirname(file);
+		fs.mkdirSync(dir, { recursive: true });
+		return fs.writeFileSync(file, contents, { encoding: 'utf-8' });
+	};
 
 	const program = ts.createProgram(cfg.fileNames, cfg.options, host);
 	const transformers: ts.CustomTransformers = {};

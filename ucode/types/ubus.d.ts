@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/triple-slash-reference */
+/// <reference no-default-lib="true"/>
+/// <reference path="./ubus.types.d.ts" />
+
 declare module 'ubus' {
 	// core types
 	export type SubscribeCallback = () => any | void;
@@ -91,7 +95,11 @@ declare module 'ubus' {
 
 		defer(object: str, method: str, args?: obj, reply_cb?: DeferredReplyCallback): IDeferred;
 
-		publish(object: str, methods: IObjectMethods, subscribe_cb?: SubscribeCallback): IObject;
+		publish(
+			object: str,
+			methods: IObjectMethods<any, any>,
+			subscribe_cb?: SubscribeCallback
+		): IObject;
 		publish(object: str, methods: null, subscribe_cb: SubscribeCallback): IObject;
 
 		remove(item: ISubscriber | IObject | IListener): bool;

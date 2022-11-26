@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/triple-slash-reference */
+/// <reference no-default-lib="true"/>
+/// <reference path="./ucode.d.ts" />
+
 declare module 'uci' {
 	export type bool_data = '0' | '1';
 	export type option_data = str;

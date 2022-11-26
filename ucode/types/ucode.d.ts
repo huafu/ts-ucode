@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/triple-slash-reference */
+/// <reference no-default-lib="true"/>
+/// <reference path="./ucode.types.d.ts" />
+
 declare interface Global {
 	[key: str]: any;
 }
@@ -103,8 +107,8 @@ declare function system(cmd: str | (str | num)[], timeout_ms?: numeric): int;
 declare function trace(level?: int): null;
 declare function proto(val: obj): obj | null;
 declare function proto<T extends obj, P extends obj>(
-	val: T & ThisType<Omit<P, keyof T>, T>,
-	proto: P & ThisType<Omit<P, keyof T>, T>
+	val: T & ThisType<Omit<P, keyof T> & T>,
+	proto: P & ThisType<Omit<P, keyof T> & T>
 ): Omit<P, keyof T> & T;
 declare function sleep(ms: int): bool;
 declare function assert(cond: bool, msg?: str): void | never;

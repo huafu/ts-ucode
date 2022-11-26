@@ -1,21 +1,25 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
+/* eslint-disable @typescript-eslint/triple-slash-reference */
+/// <reference no-default-lib="true"/>
+/// <reference path="./ucode.base.d.ts" />
 
 declare const enum UcType {
-	null,
-	integer,
-	boolean,
-	string,
-	double,
-	array,
-	object,
-	regexp,
-	function
-	// closure,
-	// upvalue,
-	// resource,
-	// program,
-	// source
+	null = 0,
+	integer = 1,
+	boolean = 2,
+	string = 3,
+	double = 4,
+	array = 5,
+	object = 6,
+	regexp = 7,
+	function = 8
+	// closure = 9,
+	// upvalue = 10,
+	// resource = 11,
+	// program = 12,
+	// source = 13
 }
 
 declare type UcTypeToJs<UC extends UcType> = UC extends UcType.null
