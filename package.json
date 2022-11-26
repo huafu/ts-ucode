@@ -1,0 +1,42 @@
+{
+	"name": "ts-ucode",
+	"version": "1.0.0",
+	"description": "TypeScript tools for OpenWRT ucode",
+	"main": "./lib/index.js",
+	"directories": {
+		"bin": "./bin"
+	},
+	"scripts": {
+		"build": "tsc -p tsconfig.json",
+		"format": "prettier --write src/",
+		"lint": "eslint --quiet src/",
+		"test": "build && ./test/run-tests.sh"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/huafu/ts-ucode.git"
+	},
+	"keywords": [
+		"ucode",
+		"openwrt",
+		"ts",
+		"typescript"
+	],
+	"author": "Huafu Gandon <huafu.gandon@gmail.com>",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/huafu/ts-ucode/issues"
+	},
+	"homepage": "https://github.com/huafu/ts-ucode#readme",
+	"dependencies": {
+		"@trivago/prettier-plugin-sort-imports": "^3.4.0",
+		"@typescript-eslint/eslint-plugin": "^5.43.0",
+		"@typescript-eslint/parser": "^5.43.0",
+		"prettier": "^2.7.1",
+		"typescript": "^4.9.3",
+		"utility-types": "^3.10.0"
+	},
+	"devDependencies": {
+		"@types/node": "^18.11.9"
+	}
+}

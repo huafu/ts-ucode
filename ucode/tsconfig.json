@@ -1,0 +1,23 @@
+{
+	"compilerOptions": {
+		"strict": true,
+		"keyofStringsOnly": true,
+		"noEmitOnError": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"allowJs": false,
+		"checkJs": false,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+		"target": "ESNext",
+		"module": "ES6",
+		"moduleResolution": "Node",
+		"noLib": true,
+		"importsNotUsedAsValues": "remove",
+		"useDefineForClassFields": false,
+		"experimentalDecorators": true,
+		"noEmitHelpers": true,
+		"removeComments": true
+		// "inlineSourceMap": true,
+	}
+}
