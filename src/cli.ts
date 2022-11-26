@@ -3,6 +3,8 @@ import fs from 'fs';
 import path from 'path';
 import ts from 'typescript';
 
+import transformers from './transformers';
+
 const COMPILER_OPTIONS: ts.CompilerOptions = {
 	keyofStringsOnly: true,
 	forceConsistentCasingInFileNames: true,
@@ -43,7 +45,6 @@ export function compile(sourceDir: string, targetDir: string): void {
 	};
 
 	const program = ts.createProgram(cfg.fileNames, cfg.options, host);
-	const transformers: ts.CustomTransformers = {};
 	const emitResult = program.emit(undefined, undefined, undefined, undefined, transformers);
 
 	let allDiagnostics = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics);
