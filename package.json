@@ -3,6 +3,13 @@
 	"version": "1.0.0",
 	"description": "TypeScript tools for OpenWRT ucode",
 	"main": "./lib/index.js",
+	"files": [
+		"README.md",
+		"LICENSE",
+		"ucode/",
+		"lib/",
+		"bin/"
+	],
 	"directories": {
 		"bin": "./bin"
 	},
