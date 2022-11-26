@@ -27,7 +27,7 @@ export function compile(sourceDir: string, targetDir = `${sourceDir}/out/`): voi
 				rootDir: sourceDir,
 				outDir: targetDir
 			},
-			include: [path.resolve(__dirname, '..', 'ucode', 'types', '*')]
+			include: [path.resolve(__dirname, '..', 'ucode', 'types'), sourceDir]
 		},
 		ts.sys,
 		process.cwd()
@@ -62,7 +62,6 @@ export function compile(sourceDir: string, targetDir = `${sourceDir}/out/`): voi
 	});
 
 	let exitCode = emitResult.emitSkipped ? 1 : 0;
-	console.log(`Process exiting with code '${exitCode}'.`);
 	process.exit(exitCode);
 }
 
