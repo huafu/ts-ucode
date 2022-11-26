@@ -18,7 +18,16 @@ const COMPILER_OPTIONS: ts.CompilerOptions = {
 	noEmitHelpers: true,
 	declaration: false,
 	emitDeclarationOnly: false,
-	typeRoots: []
+	typeRoots: [],
+	alwaysStrict: false,
+	esModuleInterop: false,
+	allowSyntheticDefaultImports: false,
+	importHelpers: false,
+	isolatedModules: true,
+	strict: true,
+	allowJs: false,
+	checkJs: false,
+	removeComments: true
 };
 
 export function compile(sourceDir: string, targetDir: string): void {
@@ -34,6 +43,9 @@ export function compile(sourceDir: string, targetDir: string): void {
 		ts.sys,
 		process.cwd()
 	);
+	// ensure correct compiler options
+	cfg.options = { ...cfg.options, ...COMPILER_OPTIONS };
+
 	const host = ts.createCompilerHost(cfg.options);
 
 	// write .uc files and not .js ones

@@ -9,7 +9,18 @@ export const isNodeExported = (node: ts.Node) =>
 	ts.canHaveModifiers(node) &&
 	!!ts.getModifiers(node)?.find((m) => m.kind === ts.SyntaxKind.ExportKeyword);
 
-export type DictForFile<T> = (sf: ts.SourceFile, ctx: ts.TransformationContext) => T;
+export const describeNode = (node: ts.Node) => {
+	let text: string | undefined;
+	try {
+		text = node.getText();
+	} catch (e) {
+	} finally {
+		text = (<any>node)?.text ?? '[no text]';
+	}
+	return `<${node ? ts.SyntaxKind[node.kind] : 'undefined'}>${text}`;
+};
+
+type DictForFile<T> = (sf: ts.SourceFile, ctx: ts.TransformationContext) => T;
 
 const dictForFileBuilder = <T>(
 	empty: (sf: ts.SourceFile, context: ts.TransformationContext) => T
@@ -28,7 +39,7 @@ const helpersFor = dictForFileBuilder((sourceFile, { factory }) => {
 	const exportSymbols: string[] = [];
 
 	const registerExport = (...nameOrSpecifier: (string | ts.ExportSpecifier)[]) => {
-		for (let item in nameOrSpecifier) {
+		for (let item of nameOrSpecifier) {
 			if (typeof item === 'string') exportSymbols.push(item);
 			else exportSpecifiers.push(item);
 		}
@@ -107,7 +118,7 @@ const helpersFor = dictForFileBuilder((sourceFile, { factory }) => {
 
 			// move all exports to one mapping at the end of the file
 			statements = [
-				...sf.statements,
+				...statements,
 				// create the global export declaration
 				factory.createExportDeclaration(
 					undefined,
@@ -159,6 +170,8 @@ export const createTransformerFactory = <T extends ts.Node>({
 		let customContext: CustomTransformationContext;
 
 		const visitor: ts.Visitor = (node) => {
+			if (!node) return node;
+
 			let res: ts.VisitResult<ts.Node> = node;
 
 			if (visitEachChild === VisitMode.beforeTransform)

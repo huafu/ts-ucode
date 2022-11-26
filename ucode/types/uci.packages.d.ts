@@ -60,7 +60,7 @@ declare module 'uci' {
 	export type IDhcpPackage = IPackage & {
 		odhcpd?: IDhcpOdhcpdSection;
 	} & {
-		[K: SectionName]: IDhcpDnsmasqSection | IDhcpDhcpSection | IDhcpHostSection;
+		[K in SectionName]: IDhcpDnsmasqSection | IDhcpDhcpSection | IDhcpHostSection;
 	};
 
 	// network
@@ -168,7 +168,7 @@ declare module 'uci' {
 	export type INetworkPackage = IPackage & {
 		globals?: INetworkGlobalSection;
 	} & {
-		[K: SectionName]: INetworkInterfaceSection | INetworkDeviceSection | INetworkWireguardSection;
+		[K in SectionName]: INetworkInterfaceSection | INetworkDeviceSection | INetworkWireguardSection;
 	};
 
 	export type IRpcdRpcdSection = IAnonymousSection<'rpcd'> & {
@@ -184,7 +184,7 @@ declare module 'uci' {
 	};
 
 	export type IRpcdPackage = IPackage & {
-		[K: SectionName]: IRpcdLoginSection | IRpcdRpcdSection;
+		[K in SectionName]: IRpcdLoginSection | IRpcdRpcdSection;
 	};
 
 	/* 
@@ -919,10 +919,11 @@ declare module 'uci' {
 		disabled?: bool_data;
 	};
 	export type IWirelessPackage = IPackage & {
-		[K: SectionName]: IWirelessDeviceSection | IWirelessIfaceSection;
+		[K in SectionName]: IWirelessDeviceSection | IWirelessIfaceSection;
 	};
 
-	export type IXinetdPackage = IPackage;
+	// eslint-disable-next-line @typescript-eslint/ban-types
+	export type IXinetdPackage = IPackage & {};
 
 	export interface IConfigData {
 		collectd?: ICollectdPackage;

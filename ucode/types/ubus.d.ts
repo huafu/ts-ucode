@@ -19,7 +19,7 @@ declare module 'ubus' {
 		};
 		method?: str;
 	};
-	export type IObjectRequest<A extends IArgs, R extends obj> = {
+	export type IObjectRequest<A extends IArgs, R extends obj | null> = {
 		reply(data: R, code?: int): bool;
 		error(code: int): bool;
 		info: IObjectCallInfo;

@@ -1,6 +1,6 @@
 import ts from 'typescript';
 
-import { VisitMode, createTransformerFactory, isNodeExported } from './helpers/utils';
+import { VisitMode, createTransformerFactory, describeNode, isNodeExported } from './helpers/utils';
 
 // grab existing export maps
 const exportDeclarationTransformerFactory = createTransformerFactory({
@@ -53,11 +53,9 @@ const exportTransformerFactory = createTransformerFactory({
 			registerExport(
 				...node.declarationList.declarations.reduce((names, { name }) => {
 					if (ts.isIdentifier(name)) return [...names, name.text];
-					else
-						throw new SyntaxError(
-							`[export] warning: unhandled export binding in ${sourceFile.fileName}`
-						);
-					return names;
+					throw new SyntaxError(
+						`[export] warning: unhandled export binding in ${sourceFile.fileName}`
+					);
 				}, <string[]>[])
 			);
 			return factory.createVariableStatement(modifiers, node.declarationList);
@@ -67,7 +65,7 @@ const exportTransformerFactory = createTransformerFactory({
 			throw new SyntaxError(
 				`Node is exported but it could not be duplicated (in: ${
 					sourceFile.fileName
-				}: ${node.getText()})`
+				}: ${describeNode(node)})`
 			);
 		}
 	}
