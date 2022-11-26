@@ -10,6 +10,12 @@ TypeScript tools for OpenWRT ucode.
 
 ## Usage
 
+### Install `ts2ucode` globally
+
+```shell
+npm install -g ts-ucode
+```
+
 ### Initialize a project dir (for completion and npm scripts)
 
 ```shell
