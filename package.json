@@ -7,9 +7,10 @@
 		"bin": "./bin"
 	},
 	"scripts": {
-		"build": "tsc -p tsconfig.json",
+		"build": "npm run clear && tsc -p tsconfig.json && cp -a src/transformers/helpers/*.uc lib/transformers/helpers/",
 		"format": "prettier --write src/",
 		"lint": "eslint --quiet src/",
+		"clear": "rm -rf ./test/out/* ./lib",
 		"test": "npm run build && ./test/run-tests.sh"
 	},
 	"repository": {
