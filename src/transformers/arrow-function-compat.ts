@@ -5,6 +5,8 @@ import { createTransformerFactory } from './helpers/utils';
 // ucode returns the last item in the stack when arrow functions have body as well, we need to discard that with a final `return`
 
 const arrowFnTransformer = createTransformerFactory({
+	file: __filename,
+	name: 'main',
 	shouldTransformNode: (node: ts.Node): node is ts.ArrowFunction =>
 		ts.isArrowFunction(node) &&
 		ts.isBlock(node.body) &&

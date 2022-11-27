@@ -4,6 +4,8 @@ import { VisitMode, createTransformerFactory, describeNode, isNodeExported } fro
 
 // grab existing export maps
 const exportDeclarationTransformerFactory = createTransformerFactory({
+	file: __filename,
+	name: 'collect-maps',
 	// only direct children of source file nodes can be exported, no need to visit any child
 	visitEachChild: VisitMode.never,
 
@@ -26,6 +28,8 @@ const exportDeclarationTransformerFactory = createTransformerFactory({
 
 // move all exported symbols to the end of the file in one mapped export
 const exportTransformerFactory = createTransformerFactory({
+	file: __filename,
+	name: 'collect-singles',
 	// only direct children of source file nodes can be exported, no need to visit any child
 	visitEachChild: VisitMode.never,
 

@@ -1,4 +1,5 @@
 import { readFileSync } from 'fs';
+import { basename } from 'path';
 import ts from 'typescript';
 
 export const isUndefined = (node: ts.Node): boolean =>
@@ -156,16 +157,25 @@ export enum VisitMode {
 	default = beforeTransform
 }
 type CreateTransformerFactoryOptions<T extends ts.Node = ts.Node> = {
+	file: string;
+	name: string;
 	shouldTransformNode?: ((node: ts.Node) => node is T) | ((node: ts.Node) => boolean);
 	transformNode: (node: T, ctx: CustomTransformationContext) => ts.VisitResult<ts.Node>;
 	visitEachChild?: VisitMode;
 };
 
 export const createTransformerFactory = <T extends ts.Node>({
+	file,
+	name,
 	shouldTransformNode = <any>(() => true),
 	transformNode,
-	visitEachChild
+	visitEachChild = VisitMode.default
 }: CreateTransformerFactoryOptions<T>): ts.TransformerFactory<ts.SourceFile> => {
+	console.debug(
+		`Creating transformer ${basename(file, '.js')} [ ${name} ] { visitEachChild: ${
+			VisitMode[visitEachChild]
+		} }`
+	);
 	return (context) => {
 		let customContext: CustomTransformationContext;
 
@@ -179,7 +189,7 @@ export const createTransformerFactory = <T extends ts.Node>({
 
 			if (!res) return res;
 
-			if (shouldTransformNode(node)) res = transformNode(node, customContext);
+			if (shouldTransformNode(res)) res = transformNode(res, customContext);
 
 			if (!res || visitEachChild !== VisitMode.afterTransform) return res;
 

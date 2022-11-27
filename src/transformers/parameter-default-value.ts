@@ -5,6 +5,8 @@ import { createTransformerFactory } from './helpers/utils';
 const parameterDefaultValueTransformerFactory = createTransformerFactory<
 	ts.FunctionDeclaration | ts.FunctionExpression | ts.ArrowFunction
 >({
+	file: __filename,
+	name: 'main',
 	// only treat fn with at least one param with default value
 	shouldTransformNode: (node) =>
 		(ts.isFunctionDeclaration(node) || ts.isFunctionExpression(node) || ts.isArrowFunction(node)) &&

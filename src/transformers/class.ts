@@ -12,6 +12,8 @@ enum ClassHelperKind {
 
 // class Class {...} => __create_class('Class', ...)
 const classTransformerFactory = createTransformerFactory({
+	file: __filename,
+	name: 'class',
 	// visitEachChild: VisitMode.afterTransform,
 
 	shouldTransformNode: ts.isClassLike,
@@ -270,6 +272,8 @@ const classTransformerFactory = createTransformerFactory({
 
 // new Class(...) => Class.create(...)
 const newKeywordTransformerFactory = createTransformerFactory({
+	file: __filename,
+	name: 'new',
 	// visitEachChild: VisitMode.afterTransform,
 
 	shouldTransformNode: ts.isNewExpression,
@@ -284,6 +288,8 @@ const newKeywordTransformerFactory = createTransformerFactory({
 
 // super => __super(this)
 const superKeywordTransformerFactory = createTransformerFactory({
+	file: __filename,
+	name: 'super',
 	// visitEachChild: VisitMode.afterTransform,
 
 	shouldTransformNode: (node) => node.kind === ts.SyntaxKind.SuperKeyword,
@@ -294,6 +300,8 @@ const superKeywordTransformerFactory = createTransformerFactory({
 
 // super(...) => __super(this, '__constructor__', ...)
 const superCtorCallTransformerFactory = createTransformerFactory({
+	file: __filename,
+	name: 'super()',
 	// visitEachChild: VisitMode.afterTransform,
 
 	shouldTransformNode: (node): node is ts.CallExpression =>
@@ -309,6 +317,8 @@ const superCtorCallTransformerFactory = createTransformerFactory({
 
 // super.method(...) => __super(this, 'method', ...)
 const superMethodCallTransformerFactory = createTransformerFactory({
+	file: __filename,
+	name: 'super.xxx()',
 	// visitEachChild: VisitMode.afterTransform,
 
 	shouldTransformNode: (node): node is ts.CallExpression =>
@@ -328,6 +338,8 @@ const superMethodCallTransformerFactory = createTransformerFactory({
 
 // obj instanceof Class => __instance_of(obj, Class)
 const instanceOfTransformerFactory = createTransformerFactory({
+	file: __filename,
+	name: 'instanceof',
 	// visitEachChild: VisitMode.afterTransform,
 
 	shouldTransformNode: (node): node is ts.BinaryExpression =>

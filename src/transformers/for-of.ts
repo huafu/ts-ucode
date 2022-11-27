@@ -3,6 +3,8 @@ import ts from 'typescript';
 import { createTransformerFactory } from './helpers/utils';
 
 const forOfTransformerFactory = createTransformerFactory({
+	file: __filename,
+	name: 'main',
 	shouldTransformNode: ts.isForOfStatement,
 
 	transformNode: (forOf, { factory }) =>
