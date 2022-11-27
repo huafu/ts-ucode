@@ -355,8 +355,8 @@ const instanceOfTransformerFactory = createTransformerFactory({
 export default [
 	classTransformerFactory,
 	newKeywordTransformerFactory,
-	superKeywordTransformerFactory,
-	superCtorCallTransformerFactory,
 	superMethodCallTransformerFactory,
+	superCtorCallTransformerFactory,
+	superKeywordTransformerFactory,
 	instanceOfTransformerFactory
 ];

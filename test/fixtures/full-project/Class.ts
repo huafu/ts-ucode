@@ -20,3 +20,9 @@ export class Base {
 export class Extended extends Base {
 	protected isExtended = true;
 }
+
+export class SecondEx extends Base {
+	constructor() {
+		super(null);
+	}
+}
