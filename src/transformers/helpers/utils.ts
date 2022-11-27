@@ -10,15 +10,17 @@ export const isNodeExported = (node: ts.Node) =>
 	ts.canHaveModifiers(node) &&
 	!!ts.getModifiers(node)?.find((m) => m.kind === ts.SyntaxKind.ExportKeyword);
 
-export const describeNode = (node: ts.Node) => {
+export const describeNode = (node: ts.Node, noText = false) => {
 	let text: string | undefined;
+	const type = `<${node ? ts.SyntaxKind[node.kind] : 'undefined'}>`;
+	if (noText) return type;
 	try {
 		text = node.getText();
 	} catch (e) {
 	} finally {
 		text = (<any>node)?.text ?? '[no text]';
 	}
-	return `<${node ? ts.SyntaxKind[node.kind] : 'undefined'}>${text}`;
+	return `${type}${text}`;
 };
 
 type DictForFile<T> = (sf: ts.SourceFile, ctx: ts.TransformationContext) => T;
@@ -171,11 +173,8 @@ export const createTransformerFactory = <T extends ts.Node>({
 	transformNode,
 	visitEachChild = VisitMode.default
 }: CreateTransformerFactoryOptions<T>): ts.TransformerFactory<ts.SourceFile> => {
-	console.debug(
-		`Creating transformer ${basename(file, '.js')} [ ${name} ] { visitEachChild: ${
-			VisitMode[visitEachChild]
-		} }`
-	);
+	const id = `${basename(file, '.js')}:${name}`;
+	console.debug(`Creating transformer ${id} (visitEachChild: ${VisitMode[visitEachChild]})`);
 	return (context) => {
 		let customContext: CustomTransformationContext;
 
@@ -185,23 +184,24 @@ export const createTransformerFactory = <T extends ts.Node>({
 			let res: ts.VisitResult<ts.Node> = node;
 
 			if (visitEachChild === VisitMode.beforeTransform)
-				res = ts.visitEachChild(res, visitor, context);
+				res = ts.visitEachChild(res, visitor, context) ?? res;
 
-			if (!res) return res;
-
-			if (shouldTransformNode(res)) res = transformNode(res, customContext);
+			if (shouldTransformNode(res)) {
+				console.debug(`[${id}] transforming ${describeNode(res, true)}`);
+				res = transformNode(res, customContext);
+			}
 
 			if (!res || visitEachChild !== VisitMode.afterTransform) return res;
 
-			if (Array.isArray(res)) return res.map((n) => ts.visitEachChild(n, visitor, context));
+			if (Array.isArray(res)) return res.map((n) => ts.visitEachChild(n, visitor, context) ?? n);
 
-			return ts.visitEachChild(<T>res, visitor, context);
+			return ts.visitEachChild(<T>res, visitor, context) ?? res;
 		};
 		return (sf) => {
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			const helpers = <IHelpers>helpersFor(sf, context);
 			customContext = { factory: context.factory, sourceFile: sf, ...helpers };
-			return ts.visitEachChild(sf, visitor, context);
+			return ts.visitEachChild(sf, visitor, context) ?? sf;
 		};
 	};
 };
