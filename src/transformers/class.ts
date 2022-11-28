@@ -265,7 +265,7 @@ const classTransformerFactory = createTransformerFactory({
 					newClass
 				);
 			}
-			return [newClass, factory.createToken(ts.SyntaxKind.SemicolonToken)];
+			return newClass;
 		}
 	}
 });

@@ -25,4 +25,16 @@ export class SecondEx extends Base {
 	constructor() {
 		super(null);
 	}
+
+	someMethod() {
+		return super.someMethod();
+	}
+}
+
+function createClass() {
+	return class Stuff {
+		dummy() {
+			return false;
+		}
+	};
 }
