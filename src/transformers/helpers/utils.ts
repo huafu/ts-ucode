@@ -1,6 +1,9 @@
+import { getPrinter } from './../../debug';
 import { readFileSync } from 'fs';
 import { basename } from 'path';
 import ts from 'typescript';
+
+const console = getPrinter();
 
 export const isUndefined = (node: ts.Node): boolean =>
 	node.kind === ts.SyntaxKind.UndefinedKeyword ||

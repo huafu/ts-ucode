@@ -1,9 +1,12 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { Environment, setEnvironment } from './debug';
+import { compile } from './compiler';
+import { println } from './io';
 import fs from 'fs';
 import path from 'path';
 import type ts from 'typescript';
 
-import { compile } from './compiler';
+setEnvironment(process.env.NODE_DEBUG ? Environment.development : Environment.production);
 
 export const init = () => {
 	const dir = process.cwd();
@@ -15,7 +18,7 @@ export const init = () => {
 		path.resolve(__dirname, '..', 'ucode', 'tsconfig.template.json'),
 		path.resolve(dir, 'tsconfig.json')
 	);
-	console.log(
+	println(
 		"Don't forget to run `npm install` so that you get typings and good completion in your IDE"
 	);
 };
@@ -46,4 +49,4 @@ export const run = async () => {
 	await compile(srcDir ?? defaultSrcDir, args[1] ?? defaultDstDir);
 };
 
-if (require.main === module) run().then(() => console.log('Done'));
+if (require.main === module) run().then(() => println('Done'));

@@ -4,10 +4,5 @@
 	"semi": true,
 	"trailingComma": "none",
 	"printWidth": 100,
-	"arrowParens": "always",
-	"importOrder": ["^[./]"],
-	"importOrderParserPlugins": ["typescript"],
-	"importOrderSeparation": true,
-	"importOrderSortSpecifiers": true,
-	"importOrderGroupNamespaceSpecifiers": true
+	"arrowParens": "always"
 }

@@ -1,3 +1,4 @@
+import { getPrinter } from './debug';
 import type { Linter } from 'eslint';
 import { ESLint } from 'eslint';
 import { mkdir, writeFile } from 'fs/promises';
@@ -6,6 +7,8 @@ import ts from 'typescript';
 import type { Mutable } from 'utility-types';
 
 import transformers from './transformers';
+
+const console = getPrinter();
 
 const COMPILER_CONFIG: ts.CompilerOptions = {
 	keyofStringsOnly: true,
