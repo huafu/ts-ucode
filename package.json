@@ -15,7 +15,7 @@
 	},
 	"scripts": {
 		"build": "npm run clear && tsc -p tsconfig.json && cp -a src/transformers/helpers/*.uc lib/transformers/helpers/",
-		"format": "prettier --write src/",
+		"format": "eslint --quiet --fix src/",
 		"lint": "eslint --quiet src/",
 		"clear": "rm -rf ./test/out/* ./lib",
 		"test": "npm run build && ./test/run-tests.sh"
@@ -44,8 +44,12 @@
 	"devDependencies": {
 		"@types/eslint": "^8.4.10",
 		"@types/node": "^18.11.9",
-		"@typescript-eslint/eslint-plugin": "^5.43.0",
-		"@typescript-eslint/parser": "^5.43.0",
+		"@typescript-eslint/eslint-plugin": "^5.45.0",
+		"@typescript-eslint/parser": "^5.45.0",
+		"eslint-config-prettier": "^8.5.0",
+		"eslint-import-resolver-typescript": "^3.5.2",
+		"eslint-plugin-import": "^2.26.0",
+		"eslint-plugin-prettier": "^4.2.1",
 		"prettier": "^2.7.1"
 	}
 }
