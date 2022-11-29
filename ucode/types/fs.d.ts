@@ -99,6 +99,7 @@ declare module 'fs' {
   export function popen(cmd: str, mode?: 'r' | 'w'): IProcess | null;
   export function readfile(path: str, size?: int): str | null;
   export function readlink(path: str): str | null;
+  export function realpath(path: str): str | null;
   export function rename(old_path: str, new_path: str): bool;
   export function rmdir(path: str): bool;
   export function stat(path: str): IStat | null;
