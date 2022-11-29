@@ -37,9 +37,16 @@ const LINTER_CONFIG: Linter.Config = {
   env: {
     es6: true,
   },
+  extends: 'eslint:recommended',
   rules: {
+    'no-unsafe-finally': 'off',
+    'no-native-reassign': 'off',
+    complexity: ['off', 11],
+    'require-yield': 'error',
     semi: ['error', 'always'],
     quotes: ['error', 'single'],
+    'comma-dangle': ['error', 'never'],
+    indent: ['error', 'tab'],
   },
 };
 
