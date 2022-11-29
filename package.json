@@ -15,8 +15,8 @@
 	},
 	"scripts": {
 		"build": "npm run clear && tsc -p tsconfig.json && cp -a src/transformers/helpers/*.uc lib/transformers/helpers/",
-		"format": "eslint --quiet --fix src/",
-		"lint": "eslint --quiet src/",
+		"format": "eslint --quiet --fix src/ ucode/types/",
+		"lint": "eslint --quiet src/ ucode/types/",
 		"clear": "rm -rf ./test/out/* ./lib",
 		"test": "npm run build && ./test/run-tests.sh"
 	},
