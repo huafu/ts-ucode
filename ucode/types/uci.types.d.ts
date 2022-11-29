@@ -52,19 +52,19 @@ declare module 'uci' {
 
   export type OperationKind =
     | 'add'
-    | 'remove'
-    | 'set'
     | 'list-add'
     | 'list-del'
+    | 'order'
+    | 'remove'
     | 'rename'
-    | 'order';
+    | 'set';
 
   export type OperationSetSection = [op: 'set', section_name: str, section_type: str];
   export type OperationSetOption = [
     op: 'set',
-    section_name: str,
     option_name: str,
     option_value: str,
+    section_name: str,
   ];
   export type OperationAddSection = [op: 'add', section_name: str, section_type: str];
   export type OperationListAdd = [op: 'list-add', section_name: str, list_name: str, item: str];
@@ -80,16 +80,16 @@ declare module 'uci' {
   ];
   export type OperationReorder = [op: 'order', section_name: str, new_index: int];
   export type Operation =
-    | OperationSetSection
-    | OperationSetOption
     | OperationAddSection
     | OperationListAdd
     | OperationListDel
     | OperationRemoveOption
     | OperationRemoveSection
-    | OperationRenameSection
     | OperationRenameOption
-    | OperationReorder;
+    | OperationRenameSection
+    | OperationReorder
+    | OperationSetOption
+    | OperationSetSection;
 
   export type OperationsMap = { [Config in PackageName]: Operation[] };
 }

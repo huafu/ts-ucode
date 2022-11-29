@@ -8,22 +8,22 @@ declare module 'ubus' {
 
   export type IObjectCallInfo = {
     acl: {
-      user: str;
       group: str;
       object?: str;
+      user: str;
     };
+    method?: str;
     object: {
       id: int;
       name?: str;
       path?: str;
     };
-    method?: str;
   };
   export type IObjectRequest<A extends IArgs, R extends obj | null> = {
-    reply(data: R, code?: int): bool;
+    args: A;
     error(code: int): bool;
     info: IObjectCallInfo;
-    args: A;
+    reply(data: R, code?: int): bool;
   };
 
   export type ObjectMethod<A extends IArgs, R extends obj | null> = (
@@ -40,12 +40,11 @@ declare module 'ubus' {
   }
 
   export interface INotifier {
-    completed(): bool;
     abort(): bool;
+    completed(): bool;
   }
 
   export interface IObject {
-    subscribed(): bool;
     notify(
       type: str,
       message?: obj,
@@ -55,25 +54,26 @@ declare module 'ubus' {
       timeout?: num,
     ): INotifier;
     remove(): bool;
+    subscribed(): bool;
   }
 
   export interface IObjectMethods<A extends IArgs, R extends obj> {
     [method_name: str]: {
-      call: ObjectMethod<A, R>;
       args: A;
+      call: ObjectMethod<A, R>;
     };
   }
 
   export interface ISubscriber {
+    remove(): bool;
     subscribe(object: str): bool;
     unsubscribe(object: str): bool;
-    remove(): bool;
   }
 
   export interface ISubscriberRequest<T = any> {
-    type: str;
     data: T;
     info: IObjectCallInfo;
+    type: str;
   }
 
   export type SubscriberNotifyCallback = (req: ISubscriberRequest) => any;
@@ -83,39 +83,30 @@ declare module 'ubus' {
   export type DeferredReplyCallback<T = any> = (data?: T) => null;
 
   export interface IDeferred {
-    completed(): bool;
     abort(): bool;
+    completed(): bool;
   }
 
   export interface IConnection {
+    call(object: str, method: str, args?: any): obj | null;
+    defer(object: str, method: str, args?: obj, reply_cb?: DeferredReplyCallback): IDeferred;
+    disconnect(): bool;
+    event(type: str, data?: obj): bool;
+    error: ErrorFunction;
     list(): str[];
     list(object: str): obj;
-
-    call(object: str, method: str, args?: any): obj | null;
-
-    defer(object: str, method: str, args?: obj, reply_cb?: DeferredReplyCallback): IDeferred;
-
+    listener(type_pattern: str, callback: ListenerCallback): IListener;
     publish(
       object: str,
       methods: IObjectMethods<any, any>,
       subscribe_cb?: SubscribeCallback,
     ): IObject;
     publish(object: str, methods: null, subscribe_cb: SubscribeCallback): IObject;
-
     remove(item: ISubscriber | IObject | IListener): bool;
-
-    listener(type_pattern: str, callback: ListenerCallback): IListener;
-
     subscriber(
       notify_cb: SubscriberNotifyCallback,
       remove_cb: SubscriberRemoveCallback,
     ): ISubscriber;
-
-    event(type: str, data?: obj): bool;
-
-    error: ErrorFunction;
-
-    disconnect(): bool;
   }
 
   export function connect(socket?: str, timeout?: num): IConnection;

@@ -15,35 +15,35 @@ declare module 'uci' {
   // dhcp
 
   export type IDhcpDnsmasqSection = IAnonymousSection<'dnsmasq'> & {
-    domainneeded?: bool_data;
-    boguspriv?: bool_data;
-    filterwin2k?: bool_data;
-    localise_queries?: bool_data;
-    rebind_protection?: bool_data;
-    rebind_localhost?: bool_data;
-    expandhosts?: bool_data;
-    nonegcache?: bool_data;
-    authoritative?: bool_data;
-    readethers?: bool_data;
-    leasefile?: option_data;
-    resolvfile?: option_data;
-    nonwildcard?: bool_data;
-    localservice?: bool_data;
-    ednspacket_max?: option_data;
-    local?: option_data;
-    domain?: option_data;
     addnhosts?: list_data;
+    authoritative?: bool_data;
+    boguspriv?: bool_data;
+    domain?: option_data;
+    domainneeded?: bool_data;
+    ednspacket_max?: option_data;
+    expandhosts?: bool_data;
+    filterwin2k?: bool_data;
+    leasefile?: option_data;
+    local?: option_data;
+    localise_queries?: bool_data;
+    localservice?: bool_data;
+    nonegcache?: bool_data;
+    nonwildcard?: bool_data;
+    readethers?: bool_data;
+    rebind_localhost?: bool_data;
+    rebind_protection?: bool_data;
+    resolvfile?: option_data;
   };
 
   export type IDhcpDhcpSection = INamedSection<'dhcp'> & {
-    interface?: option_data;
-    start?: option_data;
-    limit?: option_data;
     dhcpv4?: option_data;
-    ra_flags?: list_data;
     force?: bool_data;
-    leasetime?: option_data;
     ignore?: bool_data;
+    interface?: option_data;
+    leasetime?: option_data;
+    limit?: option_data;
+    ra_flags?: list_data;
+    start?: option_data;
   };
 
   export type IDhcpOdhcpdSection = INamedSection<'odhcpd'> & {
@@ -51,10 +51,10 @@ declare module 'uci' {
   };
 
   export type IDhcpHostSection = IAnonymousSection<'host'> & {
-    name?: option_data;
-    mac?: option_data;
-    ip?: option_data;
     dns?: bool_data;
+    ip?: option_data;
+    mac?: option_data;
+    name?: option_data;
   };
 
   export type IDhcpPackage = IPackage & {
@@ -129,40 +129,40 @@ declare module 'uci' {
   };
 
   export type INetworkDeviceSection = IAnonymousSection<'device'> & {
-    name: option_data;
-    type: 'bridge' | '8021q' | '8021ad' | 'macvlan' | 'veth';
-    ports?: list_data;
-    ipv6?: bool_data;
-    stp?: bool_data;
+    acceptlocal?: bool_data;
     bridge_empty?: bool_data;
-    promisc?: bool_data;
+    dadtransmits?: option_data;
+    igmpversion?: '1' | '2' | '3';
+    ipv6?: bool_data;
+    macaddr?: option_data;
+    mldversion?: '1' | '2';
     mtu?: option_data;
     mtu6?: option_data;
-    macaddr?: option_data;
-    txqueuelen?: option_data;
-    dadtransmits?: option_data;
-    rpfilter?: 'loose' | 'strict';
-    acceptlocal?: bool_data;
-    sendredirects?: bool_data;
-    neighreachabletime?: bool_data;
+    multicast?: bool_data;
+    name: option_data;
     neighgcstaletime?: bool_data;
     neighlocktime?: bool_data;
-    multicast?: bool_data;
-    igmpversion?: '1' | '2' | '3';
-    mldversion?: '1' | '2';
+    neighreachabletime?: bool_data;
+    ports?: list_data;
+    promisc?: bool_data;
+    rpfilter?: 'loose' | 'strict';
+    sendredirects?: bool_data;
+    stp?: bool_data;
+    txqueuelen?: option_data;
+    type: 'bridge' | '8021q' | '8021ad' | 'macvlan' | 'veth';
   };
 
   export type INetworkWireguardSection = IAnonymousSection<'wireguard_X'> & {
-    disabled?: bool_data;
-    description?: option_data;
-    public_key?: option_data;
-    private_key?: option_data;
-    preshared_key?: option_data;
     allowed_ips?: list_data;
-    route_allowed_ips?: bool_data;
+    description?: option_data;
+    disabled?: bool_data;
     endpoint_host?: option_data;
     endpoint_port?: option_data;
     persistent_keepalive?: option_data;
+    preshared_key?: option_data;
+    private_key?: option_data;
+    public_key?: option_data;
+    route_allowed_ips?: bool_data;
   };
 
   export type INetworkPackage = IPackage & {
@@ -177,9 +177,9 @@ declare module 'uci' {
   };
 
   export type IRpcdLoginSection = IAnonymousSection<'login'> & {
-    username: option_data;
     password: option_data;
     read: list_data;
+    username: option_data;
     write: list_data;
   };
 
@@ -187,736 +187,24 @@ declare module 'uci' {
     [K in SectionName]: IRpcdLoginSection | IRpcdRpcdSection;
   };
 
-  /* 
-	export interface Cfg014dd4 {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    PasswordAuth: string;
-	    RootPasswordAuth: string;
-	    Port: string;
-	}
-
-	export interface Dropbear {
-	    cfg014dd4: Cfg014dd4;
-	}
-
-	export interface Cfg01e63d {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    syn_flood: string;
-	    input: string;
-	    output: string;
-	    forward: string;
-	    disable_ipv6: string;
-	}
-
-	export interface Cfg02dc81 {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    name: string;
-	    network: string[];
-	    input: string;
-	    output: string;
-	    forward: string;
-	}
-
-	export interface Cfg03dc81 {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    name: string;
-	    network: string[];
-	    input: string;
-	    output: string;
-	    forward: string;
-	    masq: string;
-	    mtu_fix: string;
-	}
-
-	export interface Cfg04ad58 {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    src: string;
-	    dest: string;
-	}
-
-	export interface Cfg0592bd {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    name: string;
-	    src: string;
-	    proto: string;
-	    dest_port: string;
-	    target: string;
-	    family: string;
-	}
-
-	export interface Cfg0692bd {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    name: string;
-	    src: string;
-	    proto: string;
-	    icmp_type: string;
-	    family: string;
-	    target: string;
-	}
-
-	export interface Cfg0792bd {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    name: string;
-	    src: string;
-	    proto: string;
-	    family: string;
-	    target: string;
-	}
-
-	export interface Cfg0892bd {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    name: string;
-	    src: string;
-	    dest: string;
-	    proto: string;
-	    target: string;
-	}
-
-	export interface Cfg0992bd {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    name: string;
-	    src: string;
-	    dest: string;
-	    dest_port: string;
-	    proto: string;
-	    target: string;
-	}
-
-	export interface Cfg0adc81 {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    name: string;
-	    network: string;
-	    input: string;
-	    output: string;
-	    forward: string;
-	}
-
-	export interface Cfg0bad58 {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    src: string;
-	    dest: string;
-	}
-
-	export interface Cfg0cdc81 {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    name: string;
-	    network: string;
-	    input: string;
-	    output: string;
-	    forward: string;
-	}
-
-	export interface Cfg0dad58 {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    src: string;
-	    dest: string;
-	}
-
-	export interface Firewall {
-	    cfg01e63d: Cfg01e63d;
-	    cfg02dc81: Cfg02dc81;
-	    cfg03dc81: Cfg03dc81;
-	    cfg04ad58: Cfg04ad58;
-	    cfg0592bd: Cfg0592bd;
-	    cfg0692bd: Cfg0692bd;
-	    cfg0792bd: Cfg0792bd;
-	    cfg0892bd: Cfg0892bd;
-	    cfg0992bd: Cfg0992bd;
-	    cfg0adc81: Cfg0adc81;
-	    cfg0bad58: Cfg0bad58;
-	    cfg0cdc81: Cfg0cdc81;
-	    cfg0dad58: Cfg0dad58;
-	}
-
-	export interface Main {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    lang: string;
-	    mediaurlbase: string;
-	    resourcebase: string;
-	    ubuspath: string;
-	}
-
-	export interface FlashKeep {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    uci: string;
-	    dropbear: string;
-	    openvpn: string;
-	    passwd: string;
-	    opkg: string;
-	    firewall: string;
-	    uploads: string;
-	}
-
-	export interface Languages {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	}
-
-	export interface Sauth {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    sessionpath: string;
-	    sessiontime: string;
-	}
-
-	export interface Ccache {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    enable: string;
-	}
-
-	export interface Themes {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    Bootstrap: string;
-	    BootstrapDark: string;
-	    BootstrapLight: string;
-	}
-
-	export interface Apply {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    rollback: string;
-	    holdoff: string;
-	    timeout: string;
-	    display: string;
-	}
-
-	export interface Diag {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    dns: string;
-	    ping: string;
-	    route: string;
-	}
-
-	export interface Luci {
-	    main: Main;
-	    flash_keep: FlashKeep;
-	    languages: Languages;
-	    sauth: Sauth;
-	    ccache: Ccache;
-	    themes: Themes;
-	    apply: Apply;
-	    diag: Diag;
-	}
-
-	export interface Owrt {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    use_uci: string;
-	}
-
-	export interface Mosquitto2 {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    no_remote_access: string;
-	    log_dest: string;
-	    allow_anonymous: string;
-	    password_file: string;
-	    acl_file: string;
-	}
-
-	export interface Cfg03a28b {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    port: string;
-	    protocol: string;
-	    bind_address: string;
-	}
-
-	export interface Cfg04a28b {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    port: string;
-	    protocol: string;
-	    bind_address: string;
-	}
-
-	export interface Cfg05a28b {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    port: string;
-	    protocol: string;
-	    bind_address: string;
-	}
-
-	export interface Persistence {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    persistence: string;
-	    location: string;
-	    file: string;
-	}
-
-	export interface Cfg07c6b2 {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    connection: string;
-	    address: string;
-	    topic: string[];
-	    cleansession: string;
-	    remote_username: string;
-	    remote_password: string;
-	}
-
-	export interface Mosquitto {
-	    owrt: Owrt;
-	    mosquitto: Mosquitto2;
-	    cfg03a28b: Cfg03a28b;
-	    cfg04a28b: Cfg04a28b;
-	    cfg05a28b: Cfg05a28b;
-	    persistence: Persistence;
-	    cfg07c6b2: Cfg07c6b2;
-	}
-
-	export interface Globals2 {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    mmx_mask: string;
-	    logging: string;
-	    loglevel: string;
-	}
-
-	export interface Wan2 {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    enabled: string;
-	    family: string;
-	    initial_state: string;
-	    count: string;
-	    track_ip: string[];
-	}
-
-	export interface Wwan2 {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    family: string;
-	    initial_state: string;
-	    count: string;
-	    track_ip: string[];
-	    enabled: string;
-	}
-
-	export interface WanM1W3 {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    interface: string;
-	    metric: string;
-	    weight: string;
-	}
-
-	export interface WanM2W3 {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    interface: string;
-	    metric: string;
-	    weight: string;
-	}
-
-	export interface WwanM1W2 {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    interface: string;
-	    metric: string;
-	    weight: string;
-	}
-
-	export interface WwanM2W2 {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    interface: string;
-	    metric: string;
-	    weight: string;
-	}
-
-	export interface WanFailover {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    use_member: string[];
-	    last_resort: string;
-	}
-
-	export interface DefaultRuleV4 {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    dest_ip: string;
-	    family: string;
-	    use_policy: string;
-	}
-
-	export interface Mwan3 {
-	    globals: Globals2;
-	    wan: Wan2;
-	    wwan: Wwan2;
-	    wan_m1_w3: WanM1W3;
-	    wan_m2_w3: WanM2W3;
-	    wwan_m1_w2: WwanM1W2;
-	    wwan_m2_w2: WwanM2W2;
-	    wan_failover: WanFailover;
-	    default_rule_v4: DefaultRuleV4;
-	}
-
-	export interface Global {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    uci_enable: string;
-	}
-
-	export interface TekadomUi {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    listen: string[];
-	    server_name: string;
-	    include: string[];
-	    access_log: string;
-	    error_log: string;
-	}
-
-	export interface TekadomUiExt {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    listen: string[];
-	    server_name: string;
-	    include: string[];
-	    access_log: string;
-	    error_log: string;
-	}
-
-	export interface Luci2 {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    listen: string[];
-	    server_name: string;
-	    include: string[];
-	    access_log: string;
-	    error_log: string;
-	}
-
-	export interface LuciExt {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    listen: string[];
-	    server_name: string;
-	    include: string[];
-	    access_log: string;
-	    error_log: string;
-	}
-
-	export interface Nginx {
-	    global: Global;
-	    tekadom_ui: TekadomUi;
-	    tekadom_ui_ext: TekadomUiExt;
-	    luci: Luci2;
-	    luci_ext: LuciExt;
-	}
-
-	export interface Cfg01e48a {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    ttylogin: string;
-	    log_size: string;
-	    urandom_seed: string;
-	    compat_version: string;
-	    desciption: string;
-	    hostname: string;
-	    description: string;
-	    zonename: string;
-	    timezone: string;
-	    tekadom: string;
-	    log_ip: string;
-	    log_proto: string;
-	    conloglevel: string;
-	    cronloglevel: string;
-	}
-
-	export interface Ntp {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    server: string[];
-	}
-
-	export interface System {
-	    cfg01e48a: Cfg01e48a;
-	    ntp: Ntp;
-	}
-
-	export interface Cfg0102af {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    init: string;
-	    affects: string[];
-	}
-
-	export interface Cfg02e233 {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    affects: string[];
-	}
-
-	export interface Cfg03b57b {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    init: string;
-	    affects: string[];
-	}
-
-	export interface Cfg04c845 {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    init: string;
-	}
-
-	export interface Cfg05ad04 {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    init: string;
-	    affects: string[];
-	}
-
-	export interface Cfg06f057 {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    init: string;
-	}
-
-	export interface Cfg074dd4 {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    init: string;
-	}
-
-	export interface Cfg088cc9 {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    init: string;
-	}
-
-	export interface Cfg09cd75 {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    exec: string;
-	}
-
-	export interface Cfg0aa258 {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    init: string;
-	}
-
-	export interface Cfg0be48a {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    init: string;
-	    exec: string;
-	    affects: string[];
-	}
-
-	export interface Cfg0c003c {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    init: string;
-	}
-
-	export interface Cfg0d804c {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    init: string;
-	}
-
-	export interface Cfg0e8036 {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    init: string;
-	}
-
-	export interface Cfg0f0f89 {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    init: string;
-	}
-
-	export interface Cfg10822b {
-	    .anonymous: boolean;
-	    .type: string;
-	    .name: string;
-	    .index: number;
-	    init: string;
-	}
-
-	export interface IUcitrackPackage  extends IPackageData{
-	    cfg0102af: Cfg0102af;
-	    cfg02e233: Cfg02e233;
-	    cfg03b57b: Cfg03b57b;
-	    cfg04c845: Cfg04c845;
-	    cfg05ad04: Cfg05ad04;
-	    cfg06f057: Cfg06f057;
-	    cfg074dd4: Cfg074dd4;
-	    cfg088cc9: Cfg088cc9;
-	    cfg09cd75: Cfg09cd75;
-	    cfg0aa258: Cfg0aa258;
-	    cfg0be48a: Cfg0be48a;
-	    cfg0c003c: Cfg0c003c;
-	    cfg0d804c: Cfg0d804c;
-	    cfg0e8036: Cfg0e8036;
-	    cfg0f0f89: Cfg0f0f89;
-	    cfg10822b: Cfg10822b;
-	} */
-
   export type IWirelessDeviceSection = INamedSection<'wifi-device'> & {
-    type?: 'mac80211' | option_data;
-    path?: option_data;
-    channel?: option_data;
     band?: '2g' | '5g';
-    htmode?: option_data;
+    channel?: option_data;
     country?: Uppercase<option_data>;
     disabled?: bool_data;
+    htmode?: option_data;
+    path?: option_data;
+    type?: 'mac80211' | option_data;
   };
 
   export type IWirelessIfaceSection = INamedSection<'wifi-iface'> & {
     device?: option_data;
-    network?: option_data;
-    mode?: 'ap' | option_data;
-    ssid?: option_data;
+    disabled?: bool_data;
     encryption?: 'psk2' | option_data;
     key?: option_data;
-    disabled?: bool_data;
+    mode?: 'ap' | option_data;
+    network?: option_data;
+    ssid?: option_data;
   };
   export type IWirelessPackage = IPackage & {
     [K in SectionName]: IWirelessDeviceSection | IWirelessIfaceSection;
@@ -929,16 +217,8 @@ declare module 'uci' {
     collectd?: ICollectdPackage;
     dhcp?: IDhcpPackage;
     network?: INetworkPackage;
+    rpcd?: IRpcdPackage;
     wireless?: IWirelessPackage;
     xinetd?: IXinetdPackage;
-    rpcd?: IRpcdPackage;
-    // dropbear?: IDropbearPackage;
-    // firewall?: IFirewallPackage;
-    // luci?: ILuciPackage;
-    // mosquitto?: IMosquittoPackage;
-    // mwan3?: IMwan3Package;
-    // nginx?: INginxPackage;
-    // system?: ISystemPackage;
-    // ucitrack?: IUcitrackPackage;
   }
 }

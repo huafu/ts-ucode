@@ -4,30 +4,29 @@
 
 declare module 'uci' {
   export interface ICursor {
-    load(pkg: PackageName): bool;
-    unload(pkg: PackageName): bool;
-    get(pkg: PackageName, section: SectionName, option: OptionName): any_data | null;
+    add(pkg: PackageName, type: str): SectionName | null;
+    changes(): { [K in PackageName]: Operation[] };
+    changes(pkg: PackageName): Operation[];
+    commit(): bool;
+    configs(): PackageName[];
+    delete(pkg: PackageName, section: SectionName, option: OptionName): bool;
+    delete(pkg: PackageName, section: SectionName): bool;
+    error: ErrorFunction;
+    foreach(pkg: PackageName, type: str | null, fn: (section: ISection) => bool): bool;
     get_all(pkg: PackageName, section: SectionName): ISection | null;
     get_all(pkg: PackageName): IPackage | null;
     get_first(pkg: PackageName, type: str, option: OptionName): any_data | null;
     get_first(pkg: PackageName, type: str): OptionName | null;
-    add(pkg: PackageName, type: str): SectionName | null;
+    get(pkg: PackageName, section: SectionName, option: OptionName): any_data | null;
+    load(pkg: PackageName): bool;
+    rename(pkg: PackageName, section: SectionName, new_type: str): bool;
+    rename(pkg: PackageName, section: SectionName, option: OptionName, new_name: OptionName): bool;
+    reorder(pkg: PackageName, section: SectionName, idx: int): bool;
+    revert(pkg: PackageName): bool;
+    save(): bool;
     set(pkg: PackageName, section: SectionName, option: OptionName, val: any_data): bool;
     set(pkg: PackageName, section: SectionName, type: str): bool;
-    rename(pkg: PackageName, section: SectionName, option: OptionName, new_name: OptionName): bool;
-    rename(pkg: PackageName, section: SectionName, new_type: str): bool;
-    save(): bool;
-    delete(pkg: PackageName, section: SectionName, option: OptionName): bool;
-    delete(pkg: PackageName, section: SectionName): bool;
-    commit(): bool;
-    revert(pkg: PackageName): bool;
-    reorder(pkg: PackageName, section: SectionName, idx: int): bool;
-    changes(): { [K in PackageName]: Operation[] };
-    changes(pkg: PackageName): Operation[];
-    configs(): PackageName[];
-    foreach(pkg: PackageName, type: str | null, fn: (section: ISection) => bool): bool;
-
-    error: ErrorFunction;
+    unload(pkg: PackageName): bool;
   }
 
   // core types

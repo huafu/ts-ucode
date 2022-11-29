@@ -88,19 +88,19 @@ declare type PropertyKey = string;
 interface PropertyDescriptor {
   configurable?: boolean;
   enumerable?: boolean;
-  value?: any;
-  writable?: boolean;
   get?(): any;
   set?(v: any): void;
+  value?: any;
+  writable?: boolean;
 }
 
 declare interface TypedPropertyDescriptor<T> {
-  enumerable?: boolean;
   configurable?: boolean;
-  writable?: boolean;
-  value?: T;
+  enumerable?: boolean;
   get?: () => T;
   set?: (value: T) => void;
+  value?: T;
+  writable?: boolean;
 }
 
 declare type ClassDecorator = <TFunction extends Function>(target: TFunction) => TFunction | void;
