@@ -3,38 +3,38 @@
 /// <reference path="./ucode.types.d.ts" />
 
 declare interface Global {
-	[key: str]: any;
+  [key: str]: any;
 }
 declare const global: Global;
 
 declare interface CompilerOptions {
-	lstrip_blocks?: bool;
-	trim_block?: bool;
-	strict_declarations?: bool;
-	raw_mode?: bool;
-	module_search_path?: str[];
-	force_dynlink_list?: str[];
+  lstrip_blocks?: bool;
+  trim_block?: bool;
+  strict_declarations?: bool;
+  raw_mode?: bool;
+  module_search_path?: str[];
+  force_dynlink_list?: str[];
 }
 
 declare interface ErrorFunction {
-	(code: true): int;
-	(code?: false): str;
+  (code: true): int;
+  (code?: false): str;
 }
 
 declare interface Env {
-	[K: str]: str;
+  [K: str]: str;
 }
 
 declare type DateTimeSpec = {
-	sec: int;
-	min: int;
-	hour: int;
-	mday: int;
-	mon: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
-	year: int;
-	wday: 1 | 2 | 3 | 4 | 5 | 6 | 7;
-	yday: int;
-	isdst: 0 | 1;
+  sec: int;
+  min: int;
+  hour: int;
+  mday: int;
+  mon: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+  year: int;
+  wday: 1 | 2 | 3 | 4 | 5 | 6 | 7;
+  yday: int;
+  isdst: 0 | 1;
 };
 
 declare function require(mod: str): any;
@@ -48,8 +48,8 @@ declare function exists<T extends obj>(obj: T, key: keyof T | str): key is keyof
 declare function exit(code: int): never;
 declare function exp(n: numeric): num;
 declare function filter<T>(
-	arr: uc_array<T>,
-	fn: (val: T, idx: int, arr: array<T>) => bool
+  arr: uc_array<T>,
+  fn: (val: T, idx: int, arr: array<T>) => bool,
 ): array<T>;
 declare function getenv(name: keyof Env): null | str;
 declare function getenv(): Env;
@@ -95,10 +95,10 @@ declare function sprintf(fmt: str, ...args: any[]): str;
 declare function match(str: str, pattern: regexp): str[] | str[][] | null;
 declare function replace(str: str, pattern: regexp | str, replace: str, limit?: int): str;
 declare function replace(
-	str: str,
-	pattern: regexp | str,
-	replace: (match: str, ...capture_block: str[]) => str,
-	limit?: int
+  str: str,
+  pattern: regexp | str,
+  replace: (match: str, ...capture_block: str[]) => str,
+  limit?: int,
 ): str;
 declare function json(str: str): any;
 declare function include(path: str, scope?: obj): null;
@@ -107,8 +107,8 @@ declare function system(cmd: str | (str | num)[], timeout_ms?: numeric): int;
 declare function trace(level?: int): null;
 declare function proto(val: obj): obj | null;
 declare function proto<T extends obj, P extends obj>(
-	val: T & ThisType<Omit<P, keyof T> & T>,
-	proto: P & ThisType<Omit<P, keyof T> & T>
+  val: T & ThisType<Omit<P, keyof T> & T>,
+  proto: P & ThisType<Omit<P, keyof T> & T>,
 ): Omit<P, keyof T> & T;
 declare function sleep(ms: int): bool;
 declare function assert(cond: bool, msg?: str): void | never;
@@ -138,10 +138,10 @@ declare function loadstring(code: str, options: CompilerOptions & { raw_mode: fa
 declare function loadfile(path: str, options?: CompilerOptions): (...args: any[]) => any;
 declare function loadfile(path: str, options: CompilerOptions & { raw_mode: false }): () => str;
 declare function call<A, R>(
-	fn: (...args: A[]) => R,
-	ctx?: obj | null,
-	scope?: obj | null,
-	...args: A[]
+  fn: (...args: A[]) => R,
+  ctx?: obj | null,
+  scope?: obj | null,
+  ...args: A[]
 ): R;
 
 declare const ARGV: str[];
