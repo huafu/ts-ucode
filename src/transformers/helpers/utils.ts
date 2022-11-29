@@ -1,218 +1,220 @@
-import { getPrinter } from './../../debug';
 import { readFileSync } from 'fs';
 import { basename } from 'path';
+
 import ts from 'typescript';
+
+import { getPrinter } from './../../debug';
 
 const console = getPrinter();
 
 export const isUndefined = (node: ts.Node): boolean =>
-	node.kind === ts.SyntaxKind.UndefinedKeyword ||
-	(ts.isIdentifier(node) && node.text === 'undefined');
+  node.kind === ts.SyntaxKind.UndefinedKeyword ||
+  (ts.isIdentifier(node) && node.text === 'undefined');
 
 export const isNodeExported = (node: ts.Node) =>
-	ts.canHaveModifiers(node) &&
-	!!ts.getModifiers(node)?.find((m) => m.kind === ts.SyntaxKind.ExportKeyword);
+  ts.canHaveModifiers(node) &&
+  !!ts.getModifiers(node)?.find((m) => m.kind === ts.SyntaxKind.ExportKeyword);
 
 export const describeNode = (node: ts.Node, noText = false) => {
-	let text: string | undefined;
-	const type = `<${node ? ts.SyntaxKind[node.kind] : 'undefined'}>`;
-	if (noText) return type;
-	try {
-		text = node.getText();
-	} catch (e) {
-	} finally {
-		text = (<any>node)?.text ?? '[no text]';
-	}
-	return `${type}${text}`;
+  let text: string | undefined;
+  const type = `<${node ? ts.SyntaxKind[node.kind] : 'undefined'}>`;
+  if (noText) return type;
+  try {
+    text = node.getText();
+  } catch (e) {
+  } finally {
+    text = (<any>node)?.text ?? '[no text]';
+  }
+  return `${type}${text}`;
 };
 
 type DictForFile<T> = (sf: ts.SourceFile, ctx: ts.TransformationContext) => T;
 
 const dictForFileBuilder = <T>(
-	empty: (sf: ts.SourceFile, context: ts.TransformationContext) => T
+  empty: (sf: ts.SourceFile, context: ts.TransformationContext) => T,
 ): DictForFile<T> => {
-	let map: Record<string, T> = {};
-	return (sf, ctx) => {
-		const key = sf.fileName;
-		return map[key] ?? (map[key] = empty(sf, ctx));
-	};
+  let map: Record<string, T> = {};
+  return (sf, ctx) => {
+    const key = sf.fileName;
+    return map[key] ?? (map[key] = empty(sf, ctx));
+  };
 };
 
 const helpersFor = dictForFileBuilder((sourceFile, { factory }) => {
-	const injections: ts.Statement[] = [];
-	const ids: Partial<Record<string, string>> = {};
-	const exportSpecifiers: ts.ExportSpecifier[] = [];
-	const exportSymbols: string[] = [];
+  const injections: ts.Statement[] = [];
+  const ids: Partial<Record<string, string>> = {};
+  const exportSpecifiers: ts.ExportSpecifier[] = [];
+  const exportSymbols: string[] = [];
 
-	const registerExport = (...nameOrSpecifier: (string | ts.ExportSpecifier)[]) => {
-		for (let item of nameOrSpecifier) {
-			if (typeof item === 'string') exportSymbols.push(item);
-			else exportSpecifiers.push(item);
-		}
-	};
+  const registerExport = (...nameOrSpecifier: (string | ts.ExportSpecifier)[]) => {
+    for (let item of nameOrSpecifier) {
+      if (typeof item === 'string') exportSymbols.push(item);
+      else exportSpecifiers.push(item);
+    }
+  };
 
-	// prepares injection of a helper and returns its identifier
-	const idFor = (name: string): ts.Identifier => {
-		if (!ids[name]) {
-			const sf = ts.createSourceFile(
-				`${name}.js`,
-				readFileSync(require.resolve(`./${name}.uc`), { encoding: 'utf-8' }),
-				sourceFile.languageVersion
-			);
-			const item = sf.statements.find(ts.isExportAssignment)?.expression;
-			if (!item) throw new TypeError(`Unable to find default export of ${name}.js`);
+  // prepares injection of a helper and returns its identifier
+  const idFor = (name: string): ts.Identifier => {
+    if (!ids[name]) {
+      const sf = ts.createSourceFile(
+        `${name}.js`,
+        readFileSync(require.resolve(`./${name}.uc`), { encoding: 'utf-8' }),
+        sourceFile.languageVersion,
+      );
+      const item = sf.statements.find(ts.isExportAssignment)?.expression;
+      if (!item) throw new TypeError(`Unable to find default export of ${name}.js`);
 
-			const idName = `__ucode_${name}__`;
-			injections.push(
-				factory.createVariableStatement(
-					undefined,
-					factory.createVariableDeclarationList(
-						[
-							factory.createVariableDeclaration(
-								factory.createIdentifier(idName),
-								undefined,
-								undefined,
-								item
-							)
-						],
-						ts.NodeFlags.Const
-					)
-				)
-			);
+      const idName = `__ucode_${name}__`;
+      injections.push(
+        factory.createVariableStatement(
+          undefined,
+          factory.createVariableDeclarationList(
+            [
+              factory.createVariableDeclaration(
+                factory.createIdentifier(idName),
+                undefined,
+                undefined,
+                item,
+              ),
+            ],
+            ts.NodeFlags.Const,
+          ),
+        ),
+      );
 
-			ids[name] = idName;
-		}
-		return factory.createIdentifier(<string>ids[name]);
-	};
+      ids[name] = idName;
+    }
+    return factory.createIdentifier(<string>ids[name]);
+  };
 
-	const sourceFileTransformer: ts.Transformer<ts.SourceFile> = (sf) => {
-		// all exported symbols count
-		const exportsCount = exportSpecifiers.length + exportSymbols.length;
-		const injectionsCount = injections.length;
-		const modificationsCount = exportsCount + injectionsCount;
+  const sourceFileTransformer: ts.Transformer<ts.SourceFile> = (sf) => {
+    // all exported symbols count
+    const exportsCount = exportSpecifiers.length + exportSymbols.length;
+    const injectionsCount = injections.length;
+    const modificationsCount = exportsCount + injectionsCount;
 
-		// nothing to do here
-		if (modificationsCount === 0) return sf;
+    // nothing to do here
+    if (modificationsCount === 0) return sf;
 
-		let statements = [...sf.statements];
+    let statements = [...sf.statements];
 
-		// first perform injections if any
-		if (injectionsCount > 0) {
-			// get the index of the last import stmt
-			const lastImportIndex = statements
-				.map(({ kind }) => kind)
-				.lastIndexOf(ts.SyntaxKind.ImportDeclaration);
-			// re-create source file with added injections
-			statements = [
-				...statements.slice(0, lastImportIndex + 1),
-				...injections,
-				...statements.slice(lastImportIndex + 1)
-			];
-		}
+    // first perform injections if any
+    if (injectionsCount > 0) {
+      // get the index of the last import stmt
+      const lastImportIndex = statements
+        .map(({ kind }) => kind)
+        .lastIndexOf(ts.SyntaxKind.ImportDeclaration);
+      // re-create source file with added injections
+      statements = [
+        ...statements.slice(0, lastImportIndex + 1),
+        ...injections,
+        ...statements.slice(lastImportIndex + 1),
+      ];
+    }
 
-		if (exportsCount > 0) {
-			// ensure we do not have a default export as well as named exports
-			statements.forEach((n) => {
-				if (ts.isExportAssignment(n)) {
-					throw new SyntaxError(
-						`A file with named exports (${exportsCount}) cannot have default export yet (in ${
-							sf.fileName
-						}: ${n.getText()})`
-					);
-				}
-			});
+    if (exportsCount > 0) {
+      // ensure we do not have a default export as well as named exports
+      statements.forEach((n) => {
+        if (ts.isExportAssignment(n)) {
+          throw new SyntaxError(
+            `A file with named exports (${exportsCount}) cannot have default export yet (in ${
+              sf.fileName
+            }: ${n.getText()})`,
+          );
+        }
+      });
 
-			// move all exports to one mapping at the end of the file
-			statements = [
-				...statements,
-				// create the global export declaration
-				factory.createExportDeclaration(
-					undefined,
-					false,
-					factory.createNamedExports([
-						...exportSpecifiers,
-						...exportSymbols.map((name) =>
-							factory.createExportSpecifier(false, undefined, factory.createIdentifier(name))
-						)
-					]),
-					undefined,
-					undefined
-				)
-			];
-		}
+      // move all exports to one mapping at the end of the file
+      statements = [
+        ...statements,
+        // create the global export declaration
+        factory.createExportDeclaration(
+          undefined,
+          false,
+          factory.createNamedExports([
+            ...exportSpecifiers,
+            ...exportSymbols.map((name) =>
+              factory.createExportSpecifier(false, undefined, factory.createIdentifier(name)),
+            ),
+          ]),
+          undefined,
+          undefined,
+        ),
+      ];
+    }
 
-		return factory.updateSourceFile(sf, statements);
-	};
+    return factory.updateSourceFile(sf, statements);
+  };
 
-	return { sourceFileTransformer, idFor, registerExport };
+  return { sourceFileTransformer, idFor, registerExport };
 });
 
 type IPrivateHelpers = ReturnType<typeof helpersFor>;
 type IHelpers = Omit<IPrivateHelpers, 'sourceFileTransformer'>;
 
 type CustomTransformationContext = {
-	factory: ts.NodeFactory;
-	sourceFile: ts.SourceFile;
+  factory: ts.NodeFactory;
+  sourceFile: ts.SourceFile;
 } & IHelpers;
 
 export enum VisitMode {
-	never,
-	beforeTransform,
-	afterTransform,
-	default = beforeTransform
+  never,
+  beforeTransform,
+  afterTransform,
+  default = beforeTransform,
 }
 type CreateTransformerFactoryOptions<T extends ts.Node = ts.Node> = {
-	file: string;
-	name: string;
-	shouldTransformNode?: ((node: ts.Node) => node is T) | ((node: ts.Node) => boolean);
-	transformNode: (node: T, ctx: CustomTransformationContext) => ts.VisitResult<ts.Node>;
-	visitEachChild?: VisitMode;
+  file: string;
+  name: string;
+  shouldTransformNode?: ((node: ts.Node) => node is T) | ((node: ts.Node) => boolean);
+  transformNode: (node: T, ctx: CustomTransformationContext) => ts.VisitResult<ts.Node>;
+  visitEachChild?: VisitMode;
 };
 
 export const createTransformerFactory = <T extends ts.Node>({
-	file,
-	name,
-	shouldTransformNode = <any>(() => true),
-	transformNode,
-	visitEachChild = VisitMode.default
+  file,
+  name,
+  shouldTransformNode = <any>(() => true),
+  transformNode,
+  visitEachChild = VisitMode.default,
 }: CreateTransformerFactoryOptions<T>): ts.TransformerFactory<ts.SourceFile> => {
-	const id = `${basename(file, '.js')}:${name}`;
-	console.debug(`Creating transformer ${id} (visitEachChild: ${VisitMode[visitEachChild]})`);
-	return (context) => {
-		let customContext: CustomTransformationContext;
+  const id = `${basename(file, '.js')}:${name}`;
+  console.debug(`Creating transformer ${id} (visitEachChild: ${VisitMode[visitEachChild]})`);
+  return (context) => {
+    let customContext: CustomTransformationContext;
 
-		const visitor: ts.Visitor = (node) => {
-			if (!node) return node;
+    const visitor: ts.Visitor = (node) => {
+      if (!node) return node;
 
-			let res: ts.VisitResult<ts.Node> = node;
+      let res: ts.VisitResult<ts.Node> = node;
 
-			if (visitEachChild === VisitMode.beforeTransform)
-				res = ts.visitEachChild(res, visitor, context) ?? res;
+      if (visitEachChild === VisitMode.beforeTransform)
+        res = ts.visitEachChild(res, visitor, context) ?? res;
 
-			if (shouldTransformNode(res)) {
-				console.debug(`[${id}] transforming ${describeNode(res, true)}`);
-				res = transformNode(res, customContext);
-			}
+      if (shouldTransformNode(res)) {
+        console.debug(`[${id}] transforming ${describeNode(res, true)}`);
+        res = transformNode(res, customContext);
+      }
 
-			if (!res || visitEachChild !== VisitMode.afterTransform) return res;
+      if (!res || visitEachChild !== VisitMode.afterTransform) return res;
 
-			if (Array.isArray(res)) return res.map((n) => ts.visitEachChild(n, visitor, context) ?? n);
+      if (Array.isArray(res)) return res.map((n) => ts.visitEachChild(n, visitor, context) ?? n);
 
-			return ts.visitEachChild(<T>res, visitor, context) ?? res;
-		};
-		return (sf) => {
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			const helpers = <IHelpers>helpersFor(sf, context);
-			customContext = { factory: context.factory, sourceFile: sf, ...helpers };
-			return ts.visitEachChild(sf, visitor, context) ?? sf;
-		};
-	};
+      return ts.visitEachChild(<T>res, visitor, context) ?? res;
+    };
+    return (sf) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const helpers = <IHelpers>helpersFor(sf, context);
+      customContext = { factory: context.factory, sourceFile: sf, ...helpers };
+      return ts.visitEachChild(sf, visitor, context) ?? sf;
+    };
+  };
 };
 
 export const finalTransformer: ts.TransformerFactory<ts.SourceFile> = (context) => {
-	return (sf) => {
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { sourceFileTransformer } = helpersFor(sf, context);
-		return sourceFileTransformer(sf);
-	};
+  return (sf) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { sourceFileTransformer } = helpersFor(sf, context);
+    return sourceFileTransformer(sf);
+  };
 };

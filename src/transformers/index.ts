@@ -12,19 +12,19 @@ import throwFactories from './throw';
 import undefinedFactories from './undefined';
 
 const transformers: ts.CustomTransformers = {
-	before: [...classFactories],
-	after: [
-		...importPathFactories,
-		...undefinedFactories,
-		...forOfFactories,
-		...throwFactories,
-		...methodFactories,
-		...parameterDefaultValueFactories,
-		...arrowFunctionCompatFactories,
-		...exportFactories,
-		// perform global injections
-		finalTransformer
-	]
+  before: [...classFactories],
+  after: [
+    ...importPathFactories,
+    ...undefinedFactories,
+    ...forOfFactories,
+    ...throwFactories,
+    ...methodFactories,
+    ...parameterDefaultValueFactories,
+    ...arrowFunctionCompatFactories,
+    ...exportFactories,
+    // perform global injections
+    finalTransformer,
+  ],
 };
 
 export default transformers;
