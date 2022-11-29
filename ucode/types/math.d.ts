@@ -9,6 +9,7 @@ declare module 'math' {
   export function atan2(d1: double, d2: double): double;
   export function cos(n: double): double;
   export function exp(n: double): double;
+  export function isnan(v: double): bool;
   export function log(n: double): double;
   export function pow(x: double, y: double): double;
   export function rand(): int;
