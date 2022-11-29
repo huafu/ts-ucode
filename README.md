@@ -44,14 +44,14 @@ ts2ucode <source-dir> <out-dir>
   - [ ] compile standalone source file
   - [ ] user friendly errors using TS diagnostics
 - [ ] initialize project
-  - [x] create a `package.json` (to be improved!)
-  - [x] create a `tsconfig.json` (to be improved!)
+  - [x] create a `package.json` (improvements needed)
+  - [x] create a `tsconfig.json` (improvements needed)
   - [ ] ...
-- [ ] IDE completions
+- [ ] Typings/IDE completions
   - [x] removed standard JS lib
   - [x] ucode core functions
-  - [x] `uloop` (incomplete)
-  - [x] `ubus` (incomplete)
+  - [x] `uloop` (some fixes/improvements needed)
+  - [x] `ubus` (some fixes/improvements needed)
   - [x] `fs` (incomplete?)
   - [x] `uci` (incomplete for packages)
   - [x] `math`
